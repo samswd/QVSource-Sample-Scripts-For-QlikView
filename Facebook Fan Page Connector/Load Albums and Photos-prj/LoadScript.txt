@@ -1,0 +1,92 @@
+﻿///$tab Main
+SET ThousandSep=',';
+SET DecimalSep='.';
+SET MoneyThousandSep=',';
+SET MoneyDecimalSep='.';
+SET MoneyFormat='£#,##0.00;-£#,##0.00';
+SET TimeFormat='hh:mm:ss';
+SET DateFormat='DD/MM/YYYY';
+SET TimestampFormat='DD/MM/YYYY hh:mm:ss[.fff]';
+SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+
+// **********************************************
+// Config:
+// Enter your facebook fan page name or id here:
+let vFacebookFanpageNameOrId = '';
+// **********************************************
+
+let vError = '';
+
+if vFacebookFanpageNameOrId = '' then
+	let vError = 'Please set vFacebookFanpageNameOrId variable in load script.';
+	trace '$(vError)';
+	exit script;
+endif
+
+let vWorkingFolder = 'c:\QVSource\Temp\';
+let vQVSourceAppId = 'FacebookAlbumDemo';
+
+FacebookFanPagesConnector_Albums:
+LOAD
+	created_time as Albums_created_time,
+	timestamp#(mid(created_time, 1, 10) & mid(created_time, 12, 8), 'YYYY-MM-DDhh:mm:ss') as Albums_created_time_qvdatetime,
+	date#(subfield(created_time, 'T', 1), 'YYYY-MM-DD') as Albums_created_time_qvdate,
+	time#(subfield(created_time, 'T', 2), 'hh:mm:ss+0000') as Albums_created_time_qvtime,
+	updated_time as Albums_updated_time,
+	timestamp#(mid(updated_time, 1, 10) & mid(updated_time, 12, 8), 'YYYY-MM-DDhh:mm:ss') as Albums_updated_time_qvdatetime,
+	date#(subfield(updated_time, 'T', 1), 'YYYY-MM-DD') as Albums_updated_time_qvdate,
+	time#(subfield(updated_time, 'T', 2), 'hh:mm:ss+0000') as Albums_updated_time_qvtime,
+	id as Albums_id,
+	from_name as Albums_from_name,
+	from_id as Albums_from_id,
+	from_category as Albums_from_category,
+	name as Albums_name,
+	description as Albums_description,
+	link as Albums_link,
+	cover_photo as Albums_cover_photo,
+	count as Albums_count,
+	type as Albums_type
+FROM
+[http://localhost:5555/QVSource/FacebookFanPagesConnector/?table=Albums&appID=&FacebookPageOrId=$(vFacebookFanpageNameOrId)&MaxNumberOfItems=-1&noCache=true&format=qvx]
+(qvx);
+
+
+Params:
+load
+Albums_id as rowKey,
+Albums_id as FacebookPageOrId,
+-1 as MaxNumberOfItems
+resident
+FacebookFanPagesConnector_Albums;
+
+let vParamsFile = '$(vWorkingFolder)$(vQVSourceAppId)' & '_FeedItemIds.txt';
+
+store Params into '$(vParamsFile)' (txt);
+
+drop table Params;
+
+FacebookFanPagesConnector_Photos:
+LOAD
+	rowKey as Albums_id,
+	id as Photos_id,
+	created_time as Photos_created_time,
+	timestamp#(mid(created_time, 1, 10) & mid(created_time, 12, 8), 'YYYY-MM-DDhh:mm:ss') as Photos_created_time_qvdatetime,
+	date#(subfield(created_time, 'T', 1), 'YYYY-MM-DD') as Photos_created_time_qvdate,
+	time#(subfield(created_time, 'T', 2), 'hh:mm:ss+0000') as Photos_created_time_qvtime,
+	updated_time as Photos_updated_time,
+	timestamp#(mid(updated_time, 1, 10) & mid(updated_time, 12, 8), 'YYYY-MM-DDhh:mm:ss') as Photos_updated_time_qvdatetime,
+	date#(subfield(updated_time, 'T', 1), 'YYYY-MM-DD') as Photos_updated_time_qvdate,
+	time#(subfield(updated_time, 'T', 2), 'hh:mm:ss+0000') as Photos_updated_time_qvtime,
+	from_name as Photos_from_name,
+	from_category as Photos_from_category,
+	from_id as Photos_from_id,
+	picture as Photos_picture,
+	source as Photos_source,
+	height as Photos_height,
+	width as Photos_width,
+	link as Photos_link,
+	icon as Photos_icon
+FROM
+[http://localhost:5555/QVSource/FacebookFanPagesConnector/?table=Photos&appID=$(vQVSourceAppId)&processParamsSync=$(vParamsFile)&noCache=true&format=qvx]
+(qvx)

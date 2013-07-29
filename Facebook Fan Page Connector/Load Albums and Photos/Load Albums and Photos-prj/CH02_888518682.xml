@@ -38,7 +38,7 @@
         <DropShadow>false</DropShadow>
       </CaptionFont>
       <Name>
-        <v>Photos</v>
+        <v>Albums</v>
       </Name>
       <Bmp enctype="base64"></Bmp>
       <BmpMode>0</BmpMode>
@@ -209,7 +209,9 @@
     </Frame>
     <ReadOnly>false</ReadOnly>
     <FastChange></FastChange>
-    <WindowTitle></WindowTitle>
+    <WindowTitle>
+      <v>Albums</v>
+    </WindowTitle>
     <GraphMode>GRAPH_MODE_LINE</GraphMode>
     <ErrorMessageOverrides></ErrorMessageOverrides>
     <MiniChartLook>false</MiniChartLook>
@@ -217,7 +219,7 @@
   <_ExpressionDatas>
     <ExpressionData>
       <Definition>
-        <v>=count(Photo_id)</v>
+        <v>=count(Album_id)</v>
       </Definition>
       <Enable>true</Enable>
       <Present>false</Present>
@@ -241,7 +243,7 @@
     </ExpressionData>
     <ExpressionData>
       <Definition>
-        <v>sum(Photo_Comments)</v>
+        <v>sum(Album_Comments)</v>
       </Definition>
       <Enable>true</Enable>
       <Present>false</Present>
@@ -265,7 +267,7 @@
     </ExpressionData>
     <ExpressionData>
       <Definition>
-        <v>sum(Photo_Likes)</v>
+        <v>sum(Album_Likes)</v>
       </Definition>
       <Enable>true</Enable>
       <Present>false</Present>
@@ -305,7 +307,7 @@
       <BckAsLine>true</BckAsLine>
       <BckAsSymbol>false</BckAsSymbol>
       <Label>
-        <v>Photos</v>
+        <v>Albums</v>
       </Label>
       <BorderWidth>0</BorderWidth>
       <Invisible>false</Invisible>
@@ -681,7 +683,7 @@
       <BckAsLine>true</BckAsLine>
       <BckAsSymbol>false</BckAsSymbol>
       <Label>
-        <v>Photo Comments</v>
+        <v>Album Comments</v>
       </Label>
       <BorderWidth>0</BorderWidth>
       <Invisible>false</Invisible>
@@ -1057,7 +1059,7 @@
       <BckAsLine>true</BckAsLine>
       <BckAsSymbol>false</BckAsSymbol>
       <Label>
-        <v>Photo Likes</v>
+        <v>Album Likes</v>
       </Label>
       <BorderWidth>0</BorderWidth>
       <Invisible>false</Invisible>
@@ -3418,7 +3420,7 @@
           <InternalId>-1</InternalId>
           <ExpressionData>
             <Definition>
-              <v>=count(Photo_id)</v>
+              <v>=count(Album_id)</v>
             </Definition>
             <Enable>true</Enable>
             <Present>false</Present>
@@ -3456,7 +3458,7 @@
             <BckAsLine>true</BckAsLine>
             <BckAsSymbol>false</BckAsSymbol>
             <Label>
-              <v>Photos</v>
+              <v>Albums</v>
             </Label>
             <BorderWidth>0</BorderWidth>
             <Invisible>false</Invisible>
@@ -3892,7 +3894,7 @@
           <InternalId>-1</InternalId>
           <ExpressionData>
             <Definition>
-              <v>sum(Photo_Comments)</v>
+              <v>sum(Album_Comments)</v>
             </Definition>
             <Enable>true</Enable>
             <Present>false</Present>
@@ -3930,7 +3932,7 @@
             <BckAsLine>true</BckAsLine>
             <BckAsSymbol>false</BckAsSymbol>
             <Label>
-              <v>Photo Comments</v>
+              <v>Album Comments</v>
             </Label>
             <BorderWidth>0</BorderWidth>
             <Invisible>false</Invisible>
@@ -4366,7 +4368,7 @@
           <InternalId>-1</InternalId>
           <ExpressionData>
             <Definition>
-              <v>sum(Photo_Likes)</v>
+              <v>sum(Album_Likes)</v>
             </Definition>
             <Enable>true</Enable>
             <Present>false</Present>
@@ -4404,7 +4406,7 @@
             <BckAsLine>true</BckAsLine>
             <BckAsSymbol>false</BckAsSymbol>
             <Label>
-              <v>Photo Likes</v>
+              <v>Album Likes</v>
             </Label>
             <BorderWidth>0</BorderWidth>
             <Invisible>false</Invisible>

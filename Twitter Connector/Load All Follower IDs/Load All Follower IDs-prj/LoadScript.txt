@@ -1,0 +1,79 @@
+﻿///$tab Main
+SET ThousandSep=',';
+SET DecimalSep='.';
+SET MoneyThousandSep=',';
+SET MoneyDecimalSep='.';
+SET MoneyFormat='£#,##0.00;-£#,##0.00';
+SET TimeFormat='hh:mm:ss';
+SET DateFormat='DD/MM/YYYY';
+SET TimestampFormat='DD/MM/YYYY hh:mm:ss[.fff]';
+SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+
+// The account we want to get all follower ids for.
+let vUserName = 'cocacola';
+let vAppId = 'testapp';
+
+// A stamp to identify a request. The only thing you need to be careful 
+// of is if you have multiple reloads happening on the same machine in 
+// parallel of the same table then this needs to be unique between these
+// requests.
+let vRequestStamp = 'myUniqueStamp';
+
+// Assume we can load more followers
+let vIsOK = 1;
+let vNextCursor = '';
+
+if not isnull(filesize('FollowerIds.qvd')) then
+	FollowerIds:
+	LOAD
+	* 
+	FROM 'FollowerIds.qvd' (qvd);
+end if
+
+if not isnull(filesize('Post_FollowerIds_Info.qvd')) then
+
+	Post_FollowerIds_Info:
+	LOAD
+	* 
+	FROM 'Post_FollowerIds_Info.qvd' (qvd);
+	
+	let vUTC = utc();
+	let vTmp = Peek('Post_FollowerIds_Info_utc_reset', 0, 'Post_FollowerIds_Info');
+	let vNextAllowedFollowerIds = timestamp#('$(vTmp)', 'DD-MM-YYYY hh:mm:ss');
+	let vNextCursor = Peek('Post_FollowerIds_Info_next_cursor', 0, 'Post_FollowerIds_Info');
+	
+	let vIsOK = vNextAllowedFollowerIds > vUTC;
+	
+	drop table Post_FollowerIds_Info;
+
+end if
+
+if (vIsOK <> -1) then
+
+	FollowerIds:
+	LOAD
+		'$(vUserName)' as Following,
+	    id as FollowerIds_id
+	FROM
+	[http://localhost:5555/QVSource/TwitterConnectorV2/?table=FollowerIds&appID=$(vAppId)&userName=$(vUserName)&requestStamp=$(vRequestStamp)&cursor=$(vNextCursor)]
+	(qvx);
+
+	store FollowerIds into FollowerIds.qvd (qvd);
+	
+	Post_FollowerIds_Info:
+	LOAD
+		'$(vUserName)' as UserName,
+		next_cursor as Post_FollowerIds_Info_next_cursor,
+		was_rate_limited as Post_FollowerIds_Info_was_rate_limited,
+		utc_reset as Post_FollowerIds_Info_utc_reset,
+		seconds_to_reset as Post_FollowerIds_Info_seconds_to_reset
+	FROM
+	[http://localhost:5555/QVSource/TwitterConnectorV2/?table=Post_FollowerIds_Info&appID=$(vAppId)&requestStamp=$(vRequestStamp)]
+	(qvx);
+	
+	store Post_FollowerIds_Info into Post_FollowerIds_Info.qvd (qvd);
+	
+ELSE
+	trace 'Not able to get more ids at this point - next allowed at $(vNextAllowedFollowerIds)';
+endif

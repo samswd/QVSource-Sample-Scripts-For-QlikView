@@ -7,6 +7,10 @@ This is necessary because the Twitter API only allows enough API calls to retrie
 This script uses a new feature in QVSource which is under development and explained in more detail here:
 http://wiki.qvsource.com/Getting-Follow-Up-Information-Based-On-A-Previous-Tables-Response.ashx
 
+1.0.1 - 04/12/13
+----------------
+* Added badge.
+
 1.0.0 - 04/09/13
 ----------------
 * Initial version.

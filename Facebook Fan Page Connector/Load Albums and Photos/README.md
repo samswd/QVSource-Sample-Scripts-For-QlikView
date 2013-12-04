@@ -5,6 +5,9 @@ A collection of short sample QlikView scripts and apps for a range of QVSource C
 
 Change Log
 ==========
+1.0.2 - 04/12/13
+----------------
+* Added badge.
 
 1.0.1 - 29/07/13
 ----------------

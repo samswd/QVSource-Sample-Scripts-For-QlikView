@@ -1,4 +1,14 @@
-﻿///$tab Main
+﻿///$tab Change Log
+/*
+1.0.1 - 04/12/13
+----------------
+* Added badge.
+
+1.0.0 - 04/09/13
+----------------
+* Initial version.
+*/
+///$tab Main
 SET ThousandSep=',';
 SET DecimalSep='.';
 SET MoneyThousandSep=',';

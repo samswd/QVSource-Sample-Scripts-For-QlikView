@@ -1,4 +1,4 @@
-**NOTE - You will need QVSource 1.4.9.6 or later to use this sample.**
+**NOTE - You will need QVSource 1.5.0.0 or later to use this sample.**
 
 This example QlikView load script illustrates how to use the FollowerIds and Post_FollowerIds_Info tables of the Twitter Connector (and Friend equivalents) in conjunction with the UserLookupById table to build up a collection of all the followers and friends of a particular account over a number of reloads (if required).
 

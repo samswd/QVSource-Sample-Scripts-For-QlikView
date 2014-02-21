@@ -1292,6 +1292,22 @@
       <bufferName></bufferName>
       <lineIx>15</lineIx>
     </EditorBreakpoint>
+    <EditorBreakpoint>
+      <bufferName></bufferName>
+      <lineIx>307</lineIx>
+    </EditorBreakpoint>
+    <EditorBreakpoint>
+      <bufferName></bufferName>
+      <lineIx>328</lineIx>
+    </EditorBreakpoint>
+    <EditorBreakpoint>
+      <bufferName></bufferName>
+      <lineIx>258</lineIx>
+    </EditorBreakpoint>
+    <EditorBreakpoint>
+      <bufferName></bufferName>
+      <lineIx>132</lineIx>
+    </EditorBreakpoint>
   </breakpointList>
   <IdleSecondsBeforeClose>0</IdleSecondsBeforeClose>
   <ElapsedSecondsBeforeClose>0</ElapsedSecondsBeforeClose>

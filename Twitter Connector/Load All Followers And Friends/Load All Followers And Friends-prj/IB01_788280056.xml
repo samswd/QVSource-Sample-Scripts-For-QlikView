@@ -206,8 +206,8 @@
       <ExtendedValues></ExtendedValues>
       <StateName></StateName>
     </Frame>
-    <NoOfRows>6</NoOfRows>
-    <ColWidthLabel>622</ColWidthLabel>
+    <NoOfRows>8</NoOfRows>
+    <ColWidthLabel>822</ColWidthLabel>
     <ColWidthDrop>42</ColWidthDrop>
     <ColWidthData>534</ColWidthData>
     <MemberAttributes>
@@ -241,34 +241,6 @@
       </LInputBoxMemberAttributes>
       <LInputBoxMemberAttributes>
         <Label>
-          <v>vTmp</v>
-        </Label>
-        <Name>
-          <v>vTmp</v>
-        </Name>
-        <BkgColor>
-          <Mode>COLORAREA_SOLID</Mode>
-          <Luminosity>85</Luminosity>
-          <FillDirection>COLORAREA_HORZ</FillDirection>
-          <FillPattern>COLORAREA_PATTERN1</FillPattern>
-          <PrimaryCol>
-            <Col>
-              <Red>255</Red>
-              <Green>255</Green>
-              <Blue>255</Blue>
-              <Alpha>255</Alpha>
-            </Col>
-            <IsCalculated>false</IsCalculated>
-            <ColorExpr></ColorExpr>
-          </PrimaryCol>
-          <SecondaryCol></SecondaryCol>
-          <Alpha>255</Alpha>
-        </BkgColor>
-        <TextColor></TextColor>
-        <TextAdjust>0</TextAdjust>
-      </LInputBoxMemberAttributes>
-      <LInputBoxMemberAttributes>
-        <Label>
           <v>vUserName</v>
         </Label>
         <Name>
@@ -353,10 +325,94 @@
       </LInputBoxMemberAttributes>
       <LInputBoxMemberAttributes>
         <Label>
-          <v>vIsOK</v>
+          <v>vNextCursorFollowerIDs</v>
         </Label>
         <Name>
-          <v>vIsOK</v>
+          <v>vNextCursorFollowerIDs</v>
+        </Name>
+        <BkgColor>
+          <Mode>COLORAREA_SOLID</Mode>
+          <Luminosity>85</Luminosity>
+          <FillDirection>COLORAREA_HORZ</FillDirection>
+          <FillPattern>COLORAREA_PATTERN1</FillPattern>
+          <PrimaryCol>
+            <Col>
+              <Red>255</Red>
+              <Green>255</Green>
+              <Blue>255</Blue>
+              <Alpha>255</Alpha>
+            </Col>
+            <IsCalculated>false</IsCalculated>
+            <ColorExpr></ColorExpr>
+          </PrimaryCol>
+          <SecondaryCol></SecondaryCol>
+          <Alpha>255</Alpha>
+        </BkgColor>
+        <TextColor></TextColor>
+        <TextAdjust>0</TextAdjust>
+      </LInputBoxMemberAttributes>
+      <LInputBoxMemberAttributes>
+        <Label>
+          <v>vNextCursorFriendIDs</v>
+        </Label>
+        <Name>
+          <v>vNextCursorFriendIDs</v>
+        </Name>
+        <BkgColor>
+          <Mode>COLORAREA_SOLID</Mode>
+          <Luminosity>85</Luminosity>
+          <FillDirection>COLORAREA_HORZ</FillDirection>
+          <FillPattern>COLORAREA_PATTERN1</FillPattern>
+          <PrimaryCol>
+            <Col>
+              <Red>255</Red>
+              <Green>255</Green>
+              <Blue>255</Blue>
+              <Alpha>255</Alpha>
+            </Col>
+            <IsCalculated>false</IsCalculated>
+            <ColorExpr></ColorExpr>
+          </PrimaryCol>
+          <SecondaryCol></SecondaryCol>
+          <Alpha>255</Alpha>
+        </BkgColor>
+        <TextColor></TextColor>
+        <TextAdjust>0</TextAdjust>
+      </LInputBoxMemberAttributes>
+      <LInputBoxMemberAttributes>
+        <Label>
+          <v>vNextAllowedFollowerIDsRequest</v>
+        </Label>
+        <Name>
+          <v>vNextAllowedFollowerIDsRequest</v>
+        </Name>
+        <BkgColor>
+          <Mode>COLORAREA_SOLID</Mode>
+          <Luminosity>85</Luminosity>
+          <FillDirection>COLORAREA_HORZ</FillDirection>
+          <FillPattern>COLORAREA_PATTERN1</FillPattern>
+          <PrimaryCol>
+            <Col>
+              <Red>255</Red>
+              <Green>255</Green>
+              <Blue>255</Blue>
+              <Alpha>255</Alpha>
+            </Col>
+            <IsCalculated>false</IsCalculated>
+            <ColorExpr></ColorExpr>
+          </PrimaryCol>
+          <SecondaryCol></SecondaryCol>
+          <Alpha>255</Alpha>
+        </BkgColor>
+        <TextColor></TextColor>
+        <TextAdjust>0</TextAdjust>
+      </LInputBoxMemberAttributes>
+      <LInputBoxMemberAttributes>
+        <Label>
+          <v>vNextAllowedFriendIDsRequest</v>
+        </Label>
+        <Name>
+          <v>vNextAllowedFriendIDsRequest</v>
         </Name>
         <BkgColor>
           <Mode>COLORAREA_SOLID</Mode>

@@ -1,4 +1,4 @@
-**NOTE - You will need QVSource 1.5.0.0 or later to use this sample.**
+**NOTE - You will need QVSource 1.5.3.3 or later to use this sample.**
 
 This example QlikView load script illustrates how to use the FollowerIds and Post_FollowerIds_Info tables of the Twitter Connector (and Friend equivalents) in conjunction with the UserLookupById table to build up a collection of all the followers and friends of a particular account over a number of reloads (if required).
 
@@ -9,8 +9,14 @@ http://wiki.qvsource.com/Getting-Follow-Up-Information-Based-On-A-Previous-Table
 
 Further work would be needed to allow this to capture new followers/friends. Perhaps a stamp could be used and all followers/friends could be completely re-captured every X days.
 
+To use this sample you will also need to edit the vWorkingFolder and vUserName parameters on the Setup tab.
+
 Change Log
 ==========
+1.0.3 - 12/05/14
+----------------
+* UserLookupById now uses a processParamsSync file (rather than concatenating all user ids into the URL which resulted in URLs too long to be processed).
+* Now requires QVSource 1.5.3.3 or later.
 
 1.0.2 - 21/02/14
 ----------------

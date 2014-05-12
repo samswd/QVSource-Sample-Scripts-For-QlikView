@@ -249,7 +249,7 @@
   </Layout>
   <Def>
     <Name>user_id</Name>
-    <Type>PRESENT</Type>
+    <Type>NOT_PRESENT</Type>
   </Def>
   <Title></Title>
   <PrintSettings>

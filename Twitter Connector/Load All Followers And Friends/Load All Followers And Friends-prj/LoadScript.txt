@@ -1,5 +1,10 @@
 ﻿///$tab Change Log
 /*
+1.0.3 - 12/05/14
+----------------
+* UserLookupById now uses a processParamsSync file (rather than concatenating all user ids into the URL which resulted in URLs too long to be processed).
+* Now requires QVSource 1.5.3.3 or later.
+
 1.0.2 - 31/01/14
 ----------------
 * Now only loads distinct ids.
@@ -33,6 +38,7 @@ let vUserName = 'qvsource';
 // Can be anything you like to distinguish this app from other apps which might 
 // be reloading at the same time.
 let vAppId = 'testapp';
+let vWorkingFolder = 'c:\QVSource\Temp\';
 
 // A stamp to identify a request. The only thing you need to be careful 
 // of is if you have multiple reloads happening on the same machine in 
@@ -93,7 +99,7 @@ sub CheckQVSourceStatus
     
 	let currentVersionAsInt = (peek('Version_Major', 0, 'QVSourceStatus') * 1000) + (peek('Version_Minor', 0, 'QVSourceStatus') * 100) + (peek('Version_Build', 0, 'QVSourceStatus') * 10) + peek('Version_Revision', 0, 'QVSourceStatus');
  
-    if(currentVersionAsInt < 1496) then
+    if(currentVersionAsInt < 1533) then
         // Log message here or send email using QVSource Notifier Connector
         trace 'Version too low. Please update QVSource.';
         exit script;
@@ -344,9 +350,6 @@ sub buildUsersQVD
 	
 	LET noRows = NoOfRows('UserIDsLeftToLookup');
 	
-	let concatenated = '';
-	let currentCount = 0;
-	
 	//trace 'Rows = $(noRows)';
 	
 	if not IsNull(noRows) and noRows > 0 then
@@ -371,69 +374,63 @@ sub buildUsersQVD
 
 		if(vIsOK <> -1) then
 		
-			for i=0 to $(noRows)-1
+			// 
+			// Making use of this feature here:
+			// http://wiki.qvsource.com/Synchronous-Asynchronous-And-Batch-Requests-Explained.ashx
+			// Because concatenating all the ids into a string parameter to the QVSource Connector can result in a URL too long to be processed.
+			//				
+			Params:
+			Load concat(UserID,',') as userIds resident UserIDsLeftToLookup;
+						
+			let vParamsFile = '$(vWorkingFolder)$(vAppId)' & '_userIds.txt';
+			store Params into '$(vParamsFile)' (txt);
+			drop table Params; // Optional.
+		
+			trace 'About to lookup the following users $(noRows)';
 			
-				let account = Replace(peek('UserID',$(i),'UserIDsLeftToLookup'), '@', '');
+			Users:
+			LOAD
+				user_id,
+				user_name,
+				user_screen_name as UserLookupById_user_screen_name,
+				user_location as UserLookupById_user_location,
+				user_profile_image_url as UserLookupById_user_profile_image_url,
+				user_description as UserLookupById_user_description,
+				user_url as UserLookupById_user_url,
+				user_geo_enabled as UserLookupById_user_geo_enabled,
+				user_protected as UserLookupById_user_protected,
+				user_followers_count as UserLookupById_user_followers_count,
+				user_friends_count as UserLookupById_user_friends_count,
+				user_listed_count as UserLookupById_user_listed_count,
+				user_favourites_count as UserLookupById_user_favourites_count,
+				user_statuses_count as UserLookupById_user_statuses_count,
+				user_created_at as UserLookupById_user_created_at,
+				timestamp#(mid(user_created_at, 9, 2) & '-' & mid(user_created_at, 5, 3) & '-' & mid(user_created_at, 27, 4) & ' ' & mid(user_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserLookupById_user_user_created_at_timestamp,
+				date#(mid(user_created_at, 9, 2) & '-' & mid(user_created_at, 5, 3) & '-' & mid(user_created_at, 27, 4), 'DD-MMM-YYYY') as UserLookupById_user_user_created_at_date,
+				time#(mid(user_created_at, 12, 8), 'hh:mm:ss') as UserLookupById_user_user_created_at_time,
+				user_utc_offset as UserLookupById_user_utc_offset,
+				user_time_zone as UserLookupById_user_time_zone,
+				user_verified as UserLookupById_user_verified,
+				user_lang as UserLookupById_user_lang,
+				user_follow_request_sent as UserLookupById_user_follow_request_sent,
+				user_is_translator as UserLookupById_user_is_translator,
+				user_following as UserLookupById_user_following,
+				user_notifications as UserLookupById_user_notifications,
+				status_id as UserLookupById_status_id,
+				status_created_at as UserLookupById_status_created_at,
+				timestamp#(mid(status_created_at, 9, 2) & '-' & mid(status_created_at, 5, 3) & '-' & mid(status_created_at, 27, 4) & ' ' & mid(status_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserLookupById_status_status_created_at_timestamp,
+				date#(mid(status_created_at, 9, 2) & '-' & mid(status_created_at, 5, 3) & '-' & mid(status_created_at, 27, 4), 'DD-MMM-YYYY') as UserLookupById_status_status_created_at_date,
+				time#(mid(status_created_at, 12, 8), 'hh:mm:ss') as UserLookupById_status_status_created_at_time,
+				status_text as UserLookupById_status_text
+				//
+				// THERE ARE EVEN MORE FIELDS WHICH THE CONNECTOR SUPPLIES WHICH COULD BE ADDED IN HERE IF DESIRED
+				//
+			FROM
+			[http://localhost:$(vQVSourcePort)/QVSource/TwitterConnectorV2/?table=UserLookupById&appID=$(vAppId)&processParamsSync=$(vParamsFile)&requestStamp=$(vRequestStamp)&noCache=true]
+			(qvx);
 			
-				let sep = ',';
-			    if(concatenated = '') then
-			        let sep = '';
-			    endif
-			    
-			    let concatenated = concatenated & sep & account;
-		    	let currentCount = currentCount + 1;
-		    		    				
-			next i
-					
-			if(len(concatenated) > 0) then
-			
-				trace 'About to lookup the following users $(concatenated)';
-				
-				Users:
-				LOAD
-					user_id,
-					user_name,
-					user_screen_name as UserLookupById_user_screen_name,
-					user_location as UserLookupById_user_location,
-					user_profile_image_url as UserLookupById_user_profile_image_url,
-					user_description as UserLookupById_user_description,
-					user_url as UserLookupById_user_url,
-					user_geo_enabled as UserLookupById_user_geo_enabled,
-					user_protected as UserLookupById_user_protected,
-					user_followers_count as UserLookupById_user_followers_count,
-					user_friends_count as UserLookupById_user_friends_count,
-					user_listed_count as UserLookupById_user_listed_count,
-					user_favourites_count as UserLookupById_user_favourites_count,
-					user_statuses_count as UserLookupById_user_statuses_count,
-					user_created_at as UserLookupById_user_created_at,
-					timestamp#(mid(user_created_at, 9, 2) & '-' & mid(user_created_at, 5, 3) & '-' & mid(user_created_at, 27, 4) & ' ' & mid(user_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserLookupById_user_user_created_at_timestamp,
-					date#(mid(user_created_at, 9, 2) & '-' & mid(user_created_at, 5, 3) & '-' & mid(user_created_at, 27, 4), 'DD-MMM-YYYY') as UserLookupById_user_user_created_at_date,
-					time#(mid(user_created_at, 12, 8), 'hh:mm:ss') as UserLookupById_user_user_created_at_time,
-					user_utc_offset as UserLookupById_user_utc_offset,
-					user_time_zone as UserLookupById_user_time_zone,
-					user_verified as UserLookupById_user_verified,
-					user_lang as UserLookupById_user_lang,
-					user_follow_request_sent as UserLookupById_user_follow_request_sent,
-					user_is_translator as UserLookupById_user_is_translator,
-					user_following as UserLookupById_user_following,
-					user_notifications as UserLookupById_user_notifications,
-					status_id as UserLookupById_status_id,
-					status_created_at as UserLookupById_status_created_at,
-					timestamp#(mid(status_created_at, 9, 2) & '-' & mid(status_created_at, 5, 3) & '-' & mid(status_created_at, 27, 4) & ' ' & mid(status_created_at, 12, 8), 'DD-MMM-YYYY hh:mm:ss') as UserLookupById_status_status_created_at_timestamp,
-					date#(mid(status_created_at, 9, 2) & '-' & mid(status_created_at, 5, 3) & '-' & mid(status_created_at, 27, 4), 'DD-MMM-YYYY') as UserLookupById_status_status_created_at_date,
-					time#(mid(status_created_at, 12, 8), 'hh:mm:ss') as UserLookupById_status_status_created_at_time,
-					status_text as UserLookupById_status_text
-					//
-					// THERE ARE EVEN MORE FIELDS WHICH THE CONNECTOR SUPPLIES WHICH COULD BE ADDED IN HERE IF DESIRED
-					//
-				FROM
-				[http://localhost:$(vQVSourcePort)/QVSource/TwitterConnectorV2/?table=UserLookupById&appID=$(vAppId)&userIds=$(concatenated)&requestStamp=$(vRequestStamp)&noCache=true]
-				(qvx);
-				
-				store Users into Users.qvd (qvd);
-			
-			endif
-			
+			store Users into Users.qvd (qvd);			
+		
 			//
 			// You can check here if necessary if the above request was rate limited by the API
 			// and therefore not all results were retrieved.
@@ -455,8 +452,10 @@ sub buildUsersQVD
 		else
 			trace 'Not able to lookup more users yet due to API quota';
 		endif // if vIsOK
-		
-	endif
+
+	else
+		trace 'No users left to lookup.';		
+	endif // if not IsNull(noRows) and noRows > 0 then
 	
 end sub
 ///$tab Main

@@ -4,5 +4,5 @@ This is a simple script example which illustrates using the [QVSource](http://ww
 
 ##### Change Log
 
-###### 0.8.8 - 28/05/14
+###### 0.8.0 - 28/05/14
 * Initial Release.

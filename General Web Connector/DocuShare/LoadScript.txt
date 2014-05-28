@@ -1,0 +1,92 @@
+/*
+0.8.8 - 28/05/14
+----------------
+* Initial Release.
+*/
+
+//
+// Run code to get cookie. This is making an XML post to 
+// http://<IP:HOST>/<DSHOST>/dscgi/ds.py/LOGIN
+// as per the Statistics JSP programming interface: document.
+//
+
+let vUser = '[ENTER USERNAME]';
+let vPwd = '[ENTER PASSWORD]';
+let vDomain = 'DocuShare';
+let vRootUrl = 'https%3a%2f%2f[ENTER DOMAIN NAME]%2fdocushare%2f';
+
+//
+// As per the docs, we first post an XML of the form:
+// <?xml version="1.0" ?>
+// <authorization>
+// <username>user_name</username>
+// <password>my_secret</password>
+// <domain>DocuShare or Login Domain of user_name_blongs</domain>
+// </authorization>
+//
+// To 
+// http://<IP:HOST>/<DSHOST>/dscgi/ds.py/LOGIN
+//
+// Which results in an authorization cookie being sent back.
+
+RunCookie:
+LOAD @1
+FROM
+[http://localhost:5555/QVSource/WebConnectorV2/?table=RawResponse&appID=&verb=POST&url=$(vRootUrl)dscgi%2fds.py%2fLOGIN&cacheTimeInHours=0&data=%3c%3fxml+version%3d%221.0%22+%3f%3e%3cauthorization%3e%3cusername%3e$(vUser)%3c%2fusername%3e%3cpassword%3e$(vPwd)%3c%2fpassword%3e%3cdomain%3e$(vDomain)%3c%2fdomain%3e%3c%2fauthorization%3e&contentType=text%2fxml&accept=text%2fxml&cookie=a%3db&minimumTimeBetweenRequests=0&requestStamp=myStamp]
+(txt, codepage is 1252, no labels, delimiter is '\t', msq);
+
+//
+// At this point the ResponseMetaData table should contain the cookies returned from the above request when myStamp is passed in.
+//
+
+Headers:
+LOAD
+	HeaderName as ResponseMetaData_HeaderName,
+	HeaderValue as ResponseMetaData_HeaderValue
+FROM
+[http://localhost:5555/QVSource/WebConnectorV2/?table=ResponseMetaData&appID=&requestStamp=myStamp]
+(qvx);
+// IMPORTANT: If, when loading the above script in QlikView, you receive a QlikView 'Script Error' Dialog box with a 'Field Not Found'
+// (or other) error, the first thing you should do is copy and paste the full request URL (i.e. the URL between the square [...]
+// brackets IN THE QLIKVIEW SCRIPT ERROR DIALOG) into a browser address bar and check the response.
+
+//
+// Pull out the Set-Cookie header:
+//
+let vSetCookie = Lookup('ResponseMetaData_HeaderValue', 'ResponseMetaData_HeaderName', 'Set-Cookie');
+
+//
+// Then just the cookie value itself for use in data requestes:
+//
+let vCookie = left(vSetCookie, Index(vSetCookie, ';') - 1);
+
+drop table RunCookie;
+drop table Headers;
+
+//
+// We can now make requests for data using the cookie.
+//
+// The steps are:
+// 1) Construct the url to the file, e.g. 'https://[YOUR DOMAIN NAME]/docushare/dsweb/Get/Document-[DOCUMENT ID HERE]/UnknownMachineCategories.csv'
+// 2) Enter this into the QVSource connector along with the value in vCookie above and run a GET request to the RawResponse table.
+// 3) Copy the URL generated in QVSource for this request and use it in the 'Web Files...' Data source in QlikView to generate the load statement.
+// 4) Replace the cookie parameter in the generated load script with $(vCookie).
+// 5) Optionally replace the root url portion with $(vRootUrl).
+//
+
+Data:
+LOAD @1, 
+     @2, 
+     @3, 
+     @4, 
+     @5, 
+     @6, 
+     @7, 
+     @8, 
+     @9, 
+     @10, 
+     @11, 
+     @12
+FROM
+[http://localhost:5555/QVSource/WebConnectorV2/?table=RawResponse&appID=&verb=GET&url=$(vRootUrl)dsweb%2fGet%2fDocument-[DOCUMENT ID HERE]%2fUnknownMachineCategories.csv+&cacheTimeInHours=0&cookie=$(vCookie)&minimumTimeBetweenRequests=0&requestStamp=myStamp]
+(txt, codepage is 1252, no labels, delimiter is ',', msq);

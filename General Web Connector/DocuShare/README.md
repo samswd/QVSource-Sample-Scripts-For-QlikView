@@ -2,7 +2,7 @@ This is a simple script example which illustrates using the [QVSource](http://ww
 
 PLEASE NOTE: You will need QVSource 1.5.3.5 or later to use this sample.
 
-### Change Log
+##### Change Log
 
-#### 0.8.8 - 28/05/14
+###### 0.8.8 - 28/05/14
 * Initial Release.

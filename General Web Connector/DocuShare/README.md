@@ -1,0 +1,1 @@
+This is a simple script example which illustrates authenticating with and then accessing the "Statistics JSP programming interface" to extract DocuShare site information.

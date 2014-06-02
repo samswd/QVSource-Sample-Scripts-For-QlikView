@@ -1,4 +1,8 @@
 /*
+0.8.1 - 02/06/14
+----------------
+* Updated comments to only mention DocuShare API.
+
 0.8.0 - 28/05/14
 ----------------
 * Initial Release.
@@ -7,9 +11,7 @@
 //
 // Run code to get cookie. This is making an XML post to 
 // http://<IP:HOST>/<DSHOST>/dscgi/ds.py/LOGIN
-// as per the Statistics JSP programming interface: document.
 //
-
 let vUser = '[ENTER USERNAME]';
 let vPwd = '[ENTER PASSWORD]';
 let vDomain = 'DocuShare';

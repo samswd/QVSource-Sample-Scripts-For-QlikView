@@ -91,4 +91,4 @@ LOAD @1,
      @12
 FROM
 [http://localhost:5555/QVSource/WebConnectorV2/?table=RawResponse&appID=&verb=GET&url=$(vRootUrl)dsweb%2fGet%2fDocument-[DOCUMENT ID HERE]%2fUnknownMachineCategories.csv+&cacheTimeInHours=0&cookie=$(vCookie)&minimumTimeBetweenRequests=0&requestStamp=myStamp]
-(txt, codepage is 1252, no labels, delimiter is ',', msq);
+(txt, codepage is 1252, no labels, delimiter is ',', msq); 
